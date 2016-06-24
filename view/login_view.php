@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </form>
 
 Not a user yet!
-<a href="">Register</a>
+<a href="http://www.askandanswer.com/index.php/login/signup_view">Register</a>
 
 
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>

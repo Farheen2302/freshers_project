@@ -21,6 +21,7 @@ class Login extends CI_Controller {
 	public function index()
 	{
 		$this->load->view('login_view');
+		//$this->load->helper(array('form', 'url')); 
 	}
 
 
@@ -56,8 +57,89 @@ class Login extends CI_Controller {
 
 	}
 
-	public function signup()
+	public function signup_view()
 	{
-		$this->load->view('show_users');
+		// $error='hello';
+		$this->load->view('register_view');
+	}
+
+
+
+	public function send_mail($data='')
+	{
+		$config = Array(
+		    'protocol' => 'smtp',
+		    'smtp_host' => 'ssl://smtp.googlemail.com',
+		    'smtp_port' => 465,
+		    'smtp_user' => 'discusswebservice@gmail.com',
+		    'smtp_pass' => 'thisisubuntu',
+		    'mailtype'  => 'html', 
+		    'charset'   => 'iso-8859-1'
+		);
+
+	    $config['newline'] = "\r\n";
+
+		$this->load->library('email', $config);
+		$this->email->from('discusswebservice@gmail.com');
+        $this->email->to('tarun.kr0094@gmail.com','tarun');
+
+        $this->email->subject('Email Test');
+        $this->email->message('Testing the email class.');  
+
+        $this->email->send();
+
+        echo $this->email->print_debugger();
+	}
+
+
+
+
+	public function register()
+	{
+
+		$input_data = array(
+		'userid' => $this->input->post('userid'),
+		'pass' => $this->input->post('pass'),
+		'emailid'=> $this->input->post('emailid'),
+		'f_name'=>$this->input->post('f_name'),
+		'l_name' => $this->input->post('l_name'),
+		'about_me' => $this->input->post('about_me'),
+		
+			);
+		//var_dump($input_data);
+
+		 $this->load->model('register_model');
+
+		$model= new register_model;
+		$model->setUserData($input_data);
+		$flag=$model->write();
+
+		$file_name=$model->getProfileUrl();
+		if($flag)
+		{
+
+         $config['upload_path']   = './uploads'; 
+         $config['allowed_types'] = 'gif|jpg|png'; 
+         $config['max_size']      = 4000; 
+         $config['max_width']     = 1920; 
+         $config['max_height']    = 1080; 
+         $config['file_name'] =  $file_name;
+         $this->load->library('upload', $config);
+			
+         if ( ! $this->upload->do_upload("profile")) {
+            $error = array('error' => $this->upload->display_errors()); 
+            echo "ERROR Encountered!";
+            
+         }
+			
+         else { 
+            $data = array('upload_data' => $this->upload->data()); 
+            var_dump($data);
+            echo "Profile Successfully registered!";
+
+           } 
+  	       
+         
+		}
 	}
 }

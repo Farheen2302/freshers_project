@@ -77,28 +77,28 @@ class Login_Model extends CI_Model
 		$user_info=array();
 		$data=$this->getData();
 		$query="";
+		$pass=md5($data['password']);
 		if($data['query_type']=='user_name')
 		{
 
-		$query="select * from authentication where user_name='".$data['user_name']."' and pass_hash='".$data['password']."'";
+		$query="select * from user_profile where user_name='".$data['user_name']."' and pass_hash='".$pass."'";
 		}
 		else
 		{
-			$query="select * from authentication where email_id='".$data['user_name']."' and pass_hash='".$data['password']."'";
+			$query="select * from user_profile where email_id='".$data['user_name']."' and pass_hash='".$pass."'";
 		}
 		$execute = $this->db->query($query);
 		if($execute->num_rows() > 0)
 		{
 			$row=$execute->row();
-			$a_id=(int)$row->auth_id;
-			$execute2= $this->db->query("select * from user_profile where auth_id=".$a_id);
-			$row2=$execute2->row();
+			
+			
 			$temp_data=array(
-				'u_id'=> "$row2->u_id",
-				'first_name'=> "$row2->first_name",
-				'last_name'=> "$row2->last_name",
-				'about'=> "$row2->about",
-				'pic_url'=>"$row2->profile_pic_url"
+				'u_id'=> "$row->u_id",
+				'first_name'=> "$row->first_name",
+				'last_name'=> "$row->last_name",
+				'about'=> "$row->about",
+				'pic_url'=>"$row->profile_pic_url"
 
 				);
 
