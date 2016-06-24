@@ -25,7 +25,7 @@ class Login extends CI_Controller {
 	}
 
 
-	public function login_data(){
+	public function login_call(){
 		$data = array(
 		'user_name' => $this->input->post('userid'),
 		'password' => $this->input->post('pass'),
@@ -48,12 +48,23 @@ class Login extends CI_Controller {
 		$flag=$model->check();
 		if($flag)
 		{
-			var_dump($model->getUserData());
+			$user_data=$model->getUserData();
+			if($user_data['isactivated'])
+				{
+					var_dump($model->getUserData());
+				}
+
+			else
+			{
+				echo "kindly activate your account first!";
+			}
 		}
 		else
 		{
 			print("Not Found!");
 		}
+
+		
 
 	}
 
@@ -63,9 +74,35 @@ class Login extends CI_Controller {
 		$this->load->view('register_view');
 	}
 
+	public function validate()
+	{
+		$data=array(
+			'code'=> $this->input->get('code'),
+			'emailid'=> $this->input->get('email_id')
+			
+			);
+		$this->load->model('register_model');
+
+		$model= new register_model;
+
+		$flag=$model->activate($data);
+
+		if($flag)
+		{
+			echo "your account is successfully updated.";
+			sleep(2);
+			$this->load->view('login_view');
+
+		}
+		else
+		{
+			echo "there has been a error in validating your account";
+		}
 
 
-	public function send_mail($data='')
+	}
+
+	public function send_mail($emailid, $name ,$title, $message)
 	{
 		$config = Array(
 		    'protocol' => 'smtp',
@@ -81,10 +118,10 @@ class Login extends CI_Controller {
 
 		$this->load->library('email', $config);
 		$this->email->from('discusswebservice@gmail.com');
-        $this->email->to('tarun.kr0094@gmail.com','tarun');
+        $this->email->to($emailid , $name);
 
-        $this->email->subject('Email Test');
-        $this->email->message('Testing the email class.');  
+        $this->email->subject($title);
+        $this->email->message($message);  
 
         $this->email->send();
 
@@ -117,6 +154,15 @@ class Login extends CI_Controller {
 		$file_name=$model->getProfileUrl();
 		if($flag)
 		{
+			//send validation mail
+			$url=$model->getActivationUrl();
+			$message="Kindly validate your Email-ID by clicking on this link->".$url;
+			$title="ASKandANSWER-Email Verification";
+			$this->send_mail($input_data['emailid'], $input_data['f_name'], $title, $message);
+
+			echo "Verification Email sent.";
+
+
 
          $config['upload_path']   = './uploads'; 
          $config['allowed_types'] = 'gif|jpg|png'; 
@@ -136,6 +182,7 @@ class Login extends CI_Controller {
             $data = array('upload_data' => $this->upload->data()); 
             var_dump($data);
             echo "Profile Successfully registered!";
+
 
            } 
   	       

@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   <body>
 
     
-    <form action="http://www.askandanswer.com/index.php/login/login_data" method="post">
+    <form action="http://www.askandanswer.com/index.php/login/login_call" method="post">
   Username/Email <input type="text" name="userid"><br>
   Password<input type="password" name="pass"><br>
   <input type="submit" value="Submit">

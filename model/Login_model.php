@@ -94,11 +94,15 @@ class Login_Model extends CI_Model
 			
 			
 			$temp_data=array(
-				'u_id'=> "$row->u_id",
-				'first_name'=> "$row->first_name",
-				'last_name'=> "$row->last_name",
-				'about'=> "$row->about",
-				'pic_url'=>"$row->profile_pic_url"
+				'u_id'=> $row->u_id,
+				'first_name'=> $row->first_name,
+				'last_name'=> $row->last_name,
+				'about'=> $row->about,
+				'pic_url'=>$row->profile_pic_url,
+				'user_name'=> $row->user_name,
+				'email_id'=> $row->email_id,
+				'registration_date'=> $row->registration_date,
+				'isactivated'=> $row->isActivated,
 
 				);
 
@@ -113,3 +117,9 @@ class Login_Model extends CI_Model
 		
 	}
 }
+
+
+
+	
+	
+

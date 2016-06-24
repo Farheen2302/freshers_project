@@ -17,6 +17,8 @@ class Register_Model extends CI_Model
 
 	private $data;
 	private $profile_url;
+	private $activation_url;
+	
 
 	//private $user_login_data=array();
 	
@@ -64,6 +66,21 @@ class Register_Model extends CI_Model
 		$this->data = $value;
 	}
 	
+
+	public function getActivationUrl()
+	{
+		return $this->activation_url;
+	}
+
+	/**
+	* @param int Integer to set this objects ID to
+	*/
+	public function setActivationUrl($value)
+	{
+		$this->activation_url = $value;
+	}
+
+
 	public function getProfileUrl()
 	{
 		return $this->profile_url;
@@ -104,7 +121,7 @@ class Register_Model extends CI_Model
 			$u_id=1;
 		}
 
-
+		
 		$pass= md5($user_data['pass']);
 		$date = date('Y-m-d H:i:s');
 		
@@ -124,6 +141,16 @@ class Register_Model extends CI_Model
 
 		if($this->db->insert('user_profile', $user_profile_data))
 		{
+			$this->setUserData($user_profile_data);
+
+			$url=$this->generate_activation_url();
+			if($url){
+			$this->setActivationUrl($url);
+			}
+			else
+			{
+				return 0;
+			}
 			return 1;
 		}
 		else
@@ -132,5 +159,54 @@ class Register_Model extends CI_Model
 		}
 
 		
+	}
+
+
+
+	public function generate_activation_url()
+	{
+		
+		$data=$this->getUserData();
+		
+		$string="hello123"."validation".$data['email_id'];
+		
+
+		$code= md5($string);
+		$url="http://www.askandanswer.com/index.php/login/validate?"."code=".$code."&email_id=".$data['email_id'];
+		$update_query="update user_profile set verification_hash='".$code."' where email_id='".$data['email_id']."'";
+
+		if($this->db->query($update_query))
+		{
+			return $url;
+		}
+		else
+		{
+			echo "activation_url generation error!";
+			return 0;
+		}
+	}
+
+
+	public function activate($data)
+	{
+		$query="select * from user_profile where email_id='".$data['emailid']."' and verification_hash='".$data['code']."'";
+		$update="update user_profile set isActivated=1 where email_id='".$data['emailid']."'";
+		$execute= $this->db->query($query);
+		if($execute->num_rows() > 0)
+		{
+			if($this->db->query($update))
+			{
+				return 1;
+			}
+			else
+			{
+				echo "updation Error!";
+				return 0;
+			}
+		}
+		else
+		{
+			return 0;
+		}
 	}
 }
