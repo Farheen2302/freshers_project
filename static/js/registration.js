@@ -13,7 +13,7 @@ function validate_username(x)
 		alert(error);
 		return false;
 	}
-	else if(((x.value).length < 5) || ((x.value).length >  15))
+	else if((x.value.length < 5) || (x.value.length >  15))
 	{
 		x.style.background = 'Yellow';
 		error = "The username is the wrong length.\n";
@@ -39,34 +39,16 @@ function validate_email(x)
 {
 	var error = "";
 	var illegalChars = /\W/;
-	
-
-	 if (x.value == "") {
-        x.style.background = 'Yellow';
-        error = "You didn't enter a Email Id.\n";
-        alert(error);
-        return false;
- 
-    }
-
-
-	if((x.value).indexOf("@") > -1)
+	if((x.value).indexOf('@') > -1)
 	{
-		 apos=(x.value).indexOf("@");
-         dotpos=(x.value).lastIndexOf(".");
+		 apos=value.indexOf("@");
+         dotpos=value.lastIndexOf(".");
         if (apos<1||dotpos-apos<2){
         	error = " Invalid Email field.\n";
             alert(error);
             return false;
         }
 	}
-
-	else
-		{
-			alert("Enter email id.\n");
-			return false;
-		}
-	//alert("b");
 	return true;
 }
 
@@ -74,7 +56,7 @@ function validate_email(x)
 function validate_pass()
 {
 	var error = "";
-	var illegalChars = /[\W]/;
+	var illegalChars = /[\W_]/;
 
 	var x = document.getElementById("password");
 
@@ -104,7 +86,6 @@ function validate_pass()
  
     } else {
         x.style.background = 'White';
-
     }
     return true;
 }
@@ -149,75 +130,51 @@ function form_validate()
 {
 
 	//alert("inside");
-	//var a = b = c = d = e =b1=f=true;
+	var a = b = c = d = e =b1=f=true;
 
 	var x = document.getElementById('username');
-	
-	if(x!=null){
-
 	if((x.value).indexOf('@') > -1)
 	{
-		//alert("A");
-		if(!validate_email(x))
-			return false;
+		a= validate_email(x);
 	}
 	else
 	{
-		if(!validate_username(x))
-			return false
+		a= validate_username(x);
 	}
-}
 
 	var y = document.getElementById('password');
 	if(y!=null)
-	{
-		if(!validate_pass(y))
-			return false;
-	}
+		b=validate_pass(y);
 
 	var y1 = document.getElementById('repassword');
 	if(y1!=null)
-	{
-		if(!validate_repass(y,y1))
-			return false;
-	}
+		b1=validate_repass(y,y1);
 
 	var z = document.getElementById('email');
 		if(z!=null)
-		{
-			if(!validate_email(z))
-				return false;
-		}
+			c=validate_email(z);
 
 	var p = document.getElementById("phonenumber");
 	if(p!=null)
-	{
-		if(!validate_phone(p))
-			return false;
-	}
+		d=validate_phone(p);
 
 	var q = document.getElementById("firstname");
 	if(q!=null)
-	{
-		if(!validate_username(q))
-			return false;
-}
+	e = validate_username(q);
 
-	var r = document.getElementById("lastname");
+
+	var r = document.getElementById("lasttname");
 	if(r!=null)
-	{
-		if(!validate_username(r))
-			return false;
-	}
+		f = validate_username(r);
 
 	
-	
-		//alert("right");
+	if(a==true&&b==true&&c==true&&d==true&&e==true&&f==true&&b1==true){
+		alert("right");
 		document.getElementById("login_form").submit();
-		 document.getElementById("login_form").reset();
 		return true;
 
+	}
 
-
-	
+	else
+		return false;
 }
