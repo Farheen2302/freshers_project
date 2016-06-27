@@ -40,6 +40,9 @@ class Login extends CI_Controller {
 
 	public function index()
 	{
+<<<<<<< HEAD
+		//$this->load->view('login_view');
+=======
 		
 		//$this->initialize_model();
 		$this->load->helper('cookie');
@@ -87,6 +90,7 @@ class Login extends CI_Controller {
 		//var_dump($user_cookie);
 
 
+>>>>>>> 5650741eaf873062b44d3f129e6bfbba5bb31c2d
 		//$this->load->helper(array('form', 'url')); 
 	}
 
@@ -158,6 +162,11 @@ class Login extends CI_Controller {
 			$user_data=$model->getUserData();
 			if($user_data['isactivated'])
 				{
+<<<<<<< HEAD
+					var_dump($model->getUserData());
+					$this->load->view("",$data);
+					$data['']
+=======
 
 					$cookie_id=$model->set_cookie($user_data['user_name']);
 					if(!$cookie_id)
@@ -184,6 +193,7 @@ class Login extends CI_Controller {
 					//$string=$this->load->view("register_view");
 					//$array=array('result'=> $this->load->view("register_view",'',true));
 					echo json_encode($array);
+>>>>>>> 5650741eaf873062b44d3f129e6bfbba5bb31c2d
 				}
 
 			else
@@ -207,6 +217,15 @@ class Login extends CI_Controller {
 		// $error='hello';
 		$this->load->view('register_view');
 	}
+	
+
+	public function forgot_passwordabc()
+	{   
+		// $error='hello';
+		$this->load->view('forgot_pass_view');
+		 echo "Error !!";
+		//$this->load->view('register_view');
+	} 
 
 	public function validate()
 	{
@@ -328,6 +347,12 @@ class Login extends CI_Controller {
 
 
 
+<<<<<<< HEAD
+
+	public function forgot_password()
+	{
+		//check if the email id exist or not
+=======
 	//function to check username duplicacy in the DB
 	public function check_username()
 	{
@@ -356,5 +381,6 @@ class Login extends CI_Controller {
 
 
 
+>>>>>>> 5650741eaf873062b44d3f129e6bfbba5bb31c2d
 	}
 }
