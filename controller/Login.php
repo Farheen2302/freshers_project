@@ -20,7 +20,7 @@ class Login extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('login_view');
+		//$this->load->view('login_view');
 		//$this->load->helper(array('form', 'url')); 
 	}
 
@@ -52,6 +52,8 @@ class Login extends CI_Controller {
 			if($user_data['isactivated'])
 				{
 					var_dump($model->getUserData());
+					$this->load->view("",$data);
+					$data['']
 				}
 
 			else
@@ -73,6 +75,15 @@ class Login extends CI_Controller {
 		// $error='hello';
 		$this->load->view('register_view');
 	}
+	
+
+	public function forgot_passwordabc()
+	{   
+		// $error='hello';
+		$this->load->view('forgot_pass_view');
+		 echo "Error !!";
+		//$this->load->view('register_view');
+	} 
 
 	public function validate()
 	{
@@ -188,5 +199,15 @@ class Login extends CI_Controller {
   	       
          
 		}
+	}
+
+
+
+
+
+
+	public function forgot_password()
+	{
+		//check if the email id exist or not
 	}
 }
