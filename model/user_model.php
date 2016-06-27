@@ -113,10 +113,19 @@ class User_Model extends CI_Model
 			if ($this->db->insert("user", $data)) {
 				//Now we can get the ID and update the newly created object
 				$this->_id = $this->db->insert_id();
-				echo "Object Inserted!";
 				return true;
 			}
 		}
 		return false;
+	}
+
+	puclic function email_exist($input_data)
+	{
+		$query = $this->db->query("SELECT email FROM users WHERE email='$input_data");    
+    	if($row = $query->row()){
+       	 return TRUE;
+   		 }else{
+        	return FALSE;
+    }
 	}
 }

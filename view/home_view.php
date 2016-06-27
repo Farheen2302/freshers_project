@@ -20,10 +20,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   Password<input type="password" name="pass" id="password" ><br>
   <input type="button" value="Login" id = "button" onclick="form_validate()">
 </form>
-Forgot Password?
-<a href="http://www.askandanswer.com/index.php/login/forget_password_load_view">Reset Password</a>
-<br>
-Not a user yet?
+
+Not a user yet!
 <a href="http://www.askandanswer.com/index.php/login/signup_view">Register</a>
 
 

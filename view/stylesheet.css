@@ -1,0 +1,46 @@
+
+
+body
+{
+	background-color: yellow;
+
+}
+.div1
+{
+	background: green;
+	text-align: center;
+	height: 300px;
+	float:left;
+	width: 100px;
+	margin-left: 30px;
+	margin-top:  150px;
+	font: 10px;
+	
+
+
+}
+
+.div2
+{
+background: pink;
+text-align: center;
+height: 300px;
+/*width: 100px;*/
+float:left;
+margin-left: 200px;
+width: 100px;
+font: 20px;
+
+}
+
+.div3
+{
+background: red;
+text-align: center;
+height: 300px;
+float:left;
+margin-left: 300px;
+margin-top: 150px;
+width: 100px;
+font: 20px;
+}

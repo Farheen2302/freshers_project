@@ -18,137 +18,31 @@ class Login extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-
-	private $model;
-
-	//public function initialize_model()
-	function __construct()
-	{
-		parent::__construct();
-		$this->load->model('user_model');
-		$this->model= new user_model;
-
-	}
-
-
-	public function getUserModel()
-	{
-		return $this->model;
-	}
-
-
-
+	private $uu_id;
 	public function index()
 	{
-		
-		//$this->initialize_model();
-		$this->load->helper('cookie');
-		$this->load->library('encryption');
-		//$key = $this->encryption->create_key(32);
-		//var_dump($key);
-
-		//delete_cookie('askandanswer_user_cookie');
-		$key='0pR35l5Dp9t8F3y92K470nP4kmyoc4uy';
-
-		$this->encryption->initialize(array(
-                'cipher' => 'aes-256',
-                'mode' => 'ctr',
-                'key' => $key
-        )
-		);
-		$user_cookie=$this->input->cookie('askandanswer_user_cookie', true);
-		//var_dump($user_cookie);
-		$cookie_value=$this->encryption->decrypt($user_cookie);
-		//var_dump($cookie_value);
-		$user_name= strstr($cookie_value, '+',true);
-		$cookie_id= str_replace($user_name.'+', "", $cookie_value);
-		$data=array(
-			'user_name' => $user_name,
-			'cookie_id' => $cookie_id
-			);
-		//var_dump($data);
-		
-
-		var_dump($data);
-		$model= $this->getUserModel();
-
-		if($model->check_cookie($data))
-		{
-			if($model->direct_login($user_name))
-			{
-				echo "direct login";
-				var_dump($model->getUserData());	
-			}
-			
-		}
-		else{
 		$this->load->view('login_view');
-		}
-		//var_dump($user_cookie);
-
-
 		//$this->load->helper(array('form', 'url')); 
 	}
 
 
-	public function login_call($data=0){
-		
-
-		$this->load->helper(array('form', 'url'));
-
-        $this->load->library('form_validation');
-
-		if(!$data)
-		{
-			$data = array(
-				'user_name' => $this->input->post('userid'),
-				'password' => $this->input->post('pass'),
-				'query_type' => ''
+	public function login_call(){
+		$data = array(
+		'user_name' => $this->input->post('userid'),
+		'password' => $this->input->post('pass'),
+		'query_type' => ''
 			);
-			if(strstr($data['user_name'],'@'))
-			{
-				$data['query_type']='emailid';
-				$this->form_validation->set_rules('userid', 'Email', 'trim|required|valid_email');
-			}
-			else{
-				$data['query_type']='user_name';
-				$this->form_validation->set_rules('userid', 'Username', 'trim|required');
-			}
-		}
-		
-        
-		$this->form_validation->set_rules('pass', 'Password', 'trim|required|min_length[8]');
-		if($this->form_validation->run()==FALSE)
+		if(strstr($data['user_name'],'@'))
 		{
-			echo json_encode(array('result' => validation_errors()));
-			//echo ''.validation_errors();
-			return;	
+			$data['query_type']='emailid';
 		}
-		
-			
-
-
-
-		$this->load->library('encryption');
-		//$key = $this->encryption->create_key(32);
-		//var_dump($key);
-		$key='0pR35l5Dp9t8F3y92K470nP4kmyoc4uy';
-
-		$this->encryption->initialize(array(
-                'cipher' => 'aes-256',
-                'mode' => 'ctr',
-                'key' => $key
-        )
-		);
-
-
-
-
-		
-		
+		else{
+			$data['query_type']='user_name';
+		}
+		$this->load->model("login_model");
 
 		//var_dump($data);
-		$model= $this->getUserModel();
+		$model= new login_model;
 		$model->setData($data);
 		//var_dump($model->getData());
 
@@ -158,44 +52,17 @@ class Login extends CI_Controller {
 			$user_data=$model->getUserData();
 			if($user_data['isactivated'])
 				{
-
-					$cookie_id=$model->set_cookie($user_data['user_name']);
-					if(!$cookie_id)
-					{
-						echo "Error setting cookie";
-					}
-
-					$string=$user_data['user_name']."+".$cookie_id;
-
-					$cookie_value=$this->encryption->encrypt($string);
-					//var_dump($cookie_value);
-					$cookie = array(
-   					'name'   => 'askandanswer_user_cookie',
-      				'value'  => $cookie_value,
-       				'expire' => '50',
-    				'domain' => '.askandanswer.com',
-    				'path'   => '/'
-    				);
-					$this->input->set_cookie($cookie);
-
-					$array=array('result'=> $user_data['user_name']);
-					//echo json_encode($array);
-					//sleep(2);
-					//$string=$this->load->view("register_view");
-					//$array=array('result'=> $this->load->view("register_view",'',true));
-					echo json_encode($array);
+					var_dump($model->getUserData());
 				}
 
 			else
 			{
-				$array=array('result'=> "<p>kindly activate your account first!</p>");
-				echo json_encode($array);
+				echo "kindly activate your account first!";
 			}
 		}
 		else
 		{
-			$array=array('result'=> "<p>Username/password didn't matched/found!</p>");
-			echo json_encode($array);
+			print("Not Found!");
 		}
 
 		
@@ -215,9 +82,9 @@ class Login extends CI_Controller {
 			'emailid'=> $this->input->get('email_id')
 			
 			);
-		//
+		$this->load->model('register_model');
 
-		$model= $this->getUserModel();
+		$model= new register_model;
 
 		$flag=$model->activate($data);
 
@@ -279,9 +146,9 @@ class Login extends CI_Controller {
 			);
 		//var_dump($input_data);
 
-		 //
+		 $this->load->model('register_model');
 
-		$model= $this->getUserModel();
+		$model= new register_model;
 		$model->setUserData($input_data);
 		$flag=$model->write();
 
@@ -323,38 +190,106 @@ class Login extends CI_Controller {
          
 		}
 	}
+	
 
+	//Resertt password after the link click
 
-
-
-
-	//function to check username duplicacy in the DB
-	public function check_username()
+	public function reset_password()
 	{
-		
-		$model=$this->getUserModel();
-		$data = array(
-				'data' => $this->input->get('data'),
-				'type' => $this->input->get('type')
-				
+		$data=array(
+			'code'=> $this->input->get('code'),
+			'emailid'=> $this->input->get('email_id')
+			
 			);
+		$this->load->model('Forgot_pass_model');
 
-		$flag=$model->check_field_duplicacy($data);
-		//var_dump($flag);
-		if(!$flag)
-		{
-			//var_dump("inside the flag controller");
-			$array=array('result'=>"This ".$data['type']." is already registered!");
-					echo json_encode($array);	
-		}
-		else 
-		{
-			$array=array('result'=>"0");
-					echo json_encode($array);	
-		}
-		
 
+		$model= new Forgot_pass_model;
+
+		$flag=$model->verify_hash($data);
+
+		if($flag)
+		{
+			$this->load->view('Reset_Password_View',$data);
+		}
+		else
+		{
+			echo "there has been a error in validating your account";
+		}
 
 
 	}
+
+	
+	public function forget_password_load_view()
+	{
+		// $error='hello';
+		$this->load->view('forgot_pass_view');
+	}
+
+	public function forgot_password()
+	{
+		$input_data = $this->input->post('emailid');
+
+		$this->load->model('Forgot_pass_model');
+
+		$model= new Forgot_pass_model;
+		//$model->setUserData($input_data);
+
+		if($model->email_exists($input_data))
+		{
+
+			//NOW SEND THE EMAIL TO REGISTERED EMAIL ID
+			//$model->generate_activation_url($input_data);
+			$url=$model->generate_activation_url($input_data);
+			$f_name = $model->getFirstName();
+			$message="Kindly reset your ASKandANSWER password by clicking on this link->".$url;
+			$title="ASKandANSWER- Reset Password";
+			$this->send_mail($input_data, $f_name, $title, $message);
+
+			echo "Reset Password Email sent.";
+			
+				echo "Click the link sent to you in your registered email id to reset the Password.!!\n";
+				//sleep(5);
+				//$this->load->view('login_view');
+		}
+
+	}
+
+
+
+	public function enter_new_pass()
+	{
+		$this->load->model('Forgot_pass_model');
+		$model= new Forgot_pass_model;
+		//$user_id = $model->getUserId();
+		$newpassword = $this->input->post('pass');
+		echo "Here is new  password set\n";
+		$email_id = $this->input->post('email_id');
+		echo $email_id;
+		echo "Password=";
+		echo $newpassword;
+		//echo "$uu_id"+"\n";
+		$flag = $model->set_new_password($newpassword,$email_id);
+		if($flag)
+			echo "Password Reset Successfully!!";
+		else
+			echo "Password reset Failed!!";
+
+	}	
+
+/*
+
+	public function tag()
+	{
+		$tag_name = $this->input->post("tag_name");
+		$this->load->model("Tag_model");
+		$model = new Tag_model;
+		$tag_data = Tag_model->get_tag_detail($tag_name);
+		$this->load->view("Tag_view",$tag_data);
+
+	}
+
+	*/
+
 }
