@@ -29,7 +29,8 @@ class Register_Model extends CI_Model
 
 	/*
 	* SET's & GET's
-	* Set's and get's allow you to retrieve or set a private variable on an object
+	* Set's and get's al
+	low you to retrieve or set a private variable on an object
 	*/
 
 
@@ -210,3 +211,5 @@ class Register_Model extends CI_Model
 		}
 	}
 }
+
+ 
